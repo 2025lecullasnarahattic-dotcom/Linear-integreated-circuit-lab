@@ -150,4 +150,4 @@ This gives a higher value because it assumes ideal MOSFET.
   ## Inference
  - From the DC analysis, we determine the DC operating point of the MOSFET, which helps verify whether the transistor is functioning in the saturation region. This confirmation is crucial, as operation in saturation ensures that the MOSFET acts as an amplifier with the desired characteristics. 
 
-# AC Analysis: The circuit maintains a stable gain over different frequencies, proving it works well for amplification. The voltage gain is 3 (or 7.19 dB), and the -3 dB point (where gain drops) confirms its frequency limits. Simulation and theoretical results are in close agreement, with minor variations due to parasitic effects.
+ - AC Analysis: The circuit maintains a stable gain over different frequencies, proving it works well for amplification. The voltage gain is 3 (or 7.19 dB), and the -3 dB point (where gain drops) confirms its frequency limits. Simulation and theoretical results are in close agreement, with minor variations due to parasitic effects.
