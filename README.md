@@ -140,7 +140,8 @@ This gives a higher value because it assumes ideal MOSFET.
 ##### Fig 7: Transient Analysis Result
 
 - A common source amplifier typically provides a 180° phase shift between input (Vin) and output (Vout) at mid-frequency.
-- From the ploted graph, the phase shift at 98.5GHz (marked on the graph) is approximately 58.7°
+- From the ploted graph, the phase shift at-- (marked on the graph) is approximately
+---
 - This phase shift deviates from ideal 180° due to the influence of parasitic capacitances, load resistance, and MOSFET characteristics.
 - Vout= 0.745V for width of 1.07um this is practical but we change to set 200uA W=1.58u
 
