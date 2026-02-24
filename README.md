@@ -70,6 +70,8 @@ P = V × I
   -   tox=4.1×10^(-9)
   -   μCOX=Eox/tox=230.5×10^(-6)​
   -   W=(2×200u×180n)/(230.5u×(0.9-0.36)=1.07u
+  -   W=1.07u we get ID=147uA then
+  -   ID=200uA.then we increase W=1.58u
     
 ## 7)	Theory And Simulation Setup
 #### DC Analysis :
