@@ -46,32 +46,63 @@ Power Constraint	≤ 0.5 mW
 - Calculate Drain Current Using Power Constraint
 Using:
 
-P = V × I
+  P = V × I
 - 0.5 × 10⁻³ = 2 × ID
 - ID = (0.5 × 10⁻³) / 2
 - ID ≈ 3.33 × 10⁻⁴ A
 - ID ≈ 0.3 mA
-- let me consider Id = 0.2mA so we will get the power (p = I x V ) = 0.2m x 1.5 = o.3mW therefore the power is greater than the given power
+- let me consider Id = 0.2mA so we will get the power (p = I x V ) = 0.2m x 1.5 = o.3mW
+- therefore the power is greater than the given power
   
 - Drain Resistor ($R_D$): $3.75\text{ k}\Omega$.
 - Supply Voltage ($V_{DD}$): $1.5\text{V}$.
 - Gate Bias ($V_G$): $0.9\text{V}$.
 - Vt : ($V_{Vt}$): $0.36\text{V}$.
-- Device Dimensions: $L = 180\text{nm}$, $W$ is tuned to achieve the target current.
- - a) - VDS=VDD/2. or Q.point
-    - 1.5/2= ($V_{VD}$): $0.75\text{V}$.
-  - b) - RD=VDD-VD/ID.
-     - (1.5-0.75)/200uA= ($R_D$): $3.75\text{ k}\Omega$.
-  -  c)W=μCox​(VGS​−Vt​)22ID​L
-  -  μ=273.89×10^(-4)
-  -  Eox=𝜀𝑟ε0​.
-  -  𝜀𝑟=3.9.  ε0​=8.854×10^(-12)
+- Device Dimensions: $L = 180\text{nm}$,
+- $W$ is tuned to achieve the target current.
+
+-  - (1.5-0.75)/200uA= ($R_D$): $3.75\text{ k}\Omega$.
+   # Fix Q-Point
+- For maximum symmetrical swing:
+  - VDS = VDD / 2
+  - VDS = 1.5 / 2
+  - VDS = 0.75 V   
+- 
+  # Calculate Drain Resistor(RD)
+  -  - RD=(VDD-VD0/ID
+     - =(1.5-0.75)/200×10^(-6)
+       - RD=3.75k
+         
+   -  VGS>Vt
+   - VDS>VGS-Vt
+   - Saturation Region
+   - ID= 1/2×μCOX×W/L×(VGS-Vt)²
+   - W=(2.ID.L)/(μCOX×((VGS-Vt)²).
+     
+  -  C)W=μCox​(VGS-Vt)²/2.ID.​L
+  -  
+  -  # Given Parameters(From tsmc018.lib)
+  -   μ=273.89×10^(-4)
+ 
+    # Calculate COX
+  -   εox=𝜀𝑟ε0​.
+  -   𝜀𝑟=3.9.  ε0​=8.854×10^(-12)
   -   Eox=𝜀𝑟ε0​=34.53×10^(-12)
+
   -   tox=4.1×10^(-9)
-  -   μCOX=Eox/tox=230.5×10^(-6)​
+  # Calculate Process Transconductance Parameter(Kn')
+
+   -  μn=273.80cm²/V.s
+ 
+   -  Now
+  - kn'=μn×Cox
+  
+  -   μnCOX=Eox/tox=230.5×10^(-6)
+  -   L=180nm
+  -   ​
   -   W=(2×200u×180n)/(230.5u×(0.9-0.36)=1.07u
   -   W=1.07u we get ID=147uA then
-  -   ID=200uA.then we increase W=1.58u
+  -   ID=200uA. our required then we increase W=1.58u and we get Same ID.
     
 ## 7)	Theory And Simulation Setup
 #### DC Analysis :
@@ -115,9 +146,10 @@ The negative sign indicates the 180 degree phase shift between the input and out
   ![Image](https://github.com/ullasnarahatti/experiment/blob/768f0753d5889033b1fdf546b4057d6606f5c0ad/AC!23.png)
 ##### Fig 6: AC Ananlysis Result
 
-- At Frequency =  98.5GHz
-- Gain = 4.19 dB
-- Phase shift = 58.7°.
+- At Frequency =  54.77GHz
+- Gain = 7.19-3=4.19 dB
+-BW= 8.84×54.77Ghz=484.16Ghz
+- 
 
   
 - Av = −gm RD
@@ -135,6 +167,17 @@ The negative sign indicates the 180 degree phase shift between the input and out
 - 20log(2.289)=7.19 dB
 
 This gives a higher value because it assumes ideal MOSFET.
+
+# AC Analysis With Capacitor
+![Image](https://github.com/ullasnarahatti/experiment/blob/3f82a1ff9aa2b39734e4ca5275501a94c9dd1e06/123capi.png)
+
+# Extracted Parameters
+From AC plot (with CL = 10pF):
+
+Midband gain ≈ 2.300 nearly
+Gain in dB ≈ 7.234dB
+2.300 dB bandwidth ≈ 4.792 MHz
+GBP ≈ 8.849 × 4.792 MHz ≈ 42.40MHz (approx) From the AC frequency response analysis of the MOSFET common-source amplifier, it is observed that the amplifier provides a constant gain in the midband region, indicating stable amplification for low and medium frequencies
   
 #### 3. Tansient Ananlysis 
 
