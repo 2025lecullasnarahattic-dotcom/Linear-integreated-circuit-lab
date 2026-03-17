@@ -492,3 +492,304 @@ provides a large bandwidth close to **276.8 MHz**.
 Because the cascode configuration increases output resistance and
 reduces capacitance effects, it offers improved performance compared
 with a standard common‑source amplifier stage.
+
+
+
+# Experiment 2 – Circuit 2C
+
+## Common Source MOS Amplifier with Diode-Connected NMOS Bias and PMOS Active Load
+
+---
+
+## 1. Circuit Overview
+
+This circuit implements a **common source MOSFET amplifier** where the load is replaced by a **PMOS active load transistor**.
+A **diode-connected NMOS device** is used to generate a bias voltage that controls the current flowing through the amplifier.
+
+Compared with a simple resistor load, the active load improves gain because it behaves like a **large equivalent resistance**.
+
+<img width="1152" height="724" alt="Circuit" src="https://github.com/user-attachments/assets/238f321f-1714-432e-a2f9-38f08a4c5a21" />
+
+---
+
+# 2. Biasing Requirements
+
+The design uses the following operating conditions.
+
+| Quantity               | Value   |
+| ---------------------- | ------- |
+| Supply voltage         | 1.5 V   |
+| Target drain current   | 200 µA  |
+| NMOS threshold voltage | 0.36 V  |
+| PMOS threshold voltage | −0.39 V |
+
+To obtain proper amplifier action, all MOSFETs must operate in the **saturation region**.
+
+---
+
+# 3. MOSFET Voltage Limits
+
+The following voltage constraints ensure saturation operation.
+
+| Parameter                 | Requirement                               |
+| ------------------------- | ----------------------------------------- |
+| NMOS gate-source voltage  | must exceed threshold voltage             |
+| NMOS drain-source voltage | must be larger than overdrive voltage     |
+| PMOS source-gate voltage  | must exceed threshold magnitude           |
+| PMOS source-drain voltage | must remain larger than overdrive voltage |
+
+These limits guarantee that each transistor behaves as a **controlled current source**, which is necessary for analog amplification.
+
+---
+
+# 4. Determination of Overdrive Voltage
+
+The overdrive voltage is defined as the difference between gate-source voltage and threshold voltage.
+
+| Calculation              | Result      |
+| ------------------------ | ----------- |
+| Gate voltage requirement | 0.36 + 0.25 |
+| Resulting VGS            | **0.61 V**  |
+| Overdrive voltage        | **0.25 V**  |
+
+The chosen value satisfies the condition:
+
+* overdrive voltage must be positive
+* overdrive voltage must be smaller than the drain-source voltage
+
+Since the design sets
+
+**VDS ≈ 0.75 V**
+
+the selected value remains well inside the allowed range.
+
+---
+
+# 5. Role of the Diode-Connected NMOS
+
+Transistor **M3** is configured as a diode by connecting its gate and drain together.
+
+This creates a stable reference voltage.
+
+| Node                 | Voltage |
+| -------------------- | ------- |
+| Source of M3         | 0 V     |
+| Gate and drain of M3 | 0.5 V   |
+
+Because the same node connects to the source of transistor **M1**, the source voltage of the amplifier transistor becomes
+
+**VS1 ≈ 0.5 V**
+
+This bias point determines the current flowing through the amplifier stage.
+
+---
+
+# 6. Gate Bias of the Amplifier Transistor
+
+To maintain the desired drain current, the amplifier transistor must satisfy
+
+| Condition    | Value  |
+| ------------ | ------ |
+| Required VGS | 0.61 V |
+
+Since the source node is already at **0.5 V**, the gate voltage must be
+
+| Calculation     | Result     |
+| --------------- | ---------- |
+| VG1 = VS1 + VGS | **1.11 V** |
+
+Therefore, the DC input bias voltage applied to the gate is approximately
+
+**VIN ≈ 1.11 V**
+
+---
+
+# 7. Choice of Output Operating Voltage
+
+For symmetrical signal swing, the drain voltage is typically placed near the middle of the supply.
+
+| Expression    | Result     |
+| ------------- | ---------- |
+| VDS ≈ VDD / 2 | **0.75 V** |
+
+Adding the source voltage gives the final output node voltage
+
+| Calculation | Result     |
+| ----------- | ---------- |
+| Vout        | **1.25 V** |
+
+This operating point allows the output signal to swing without pushing the transistors into cutoff or triode regions.
+
+---
+
+# 8. PMOS Active Load Operation
+
+The PMOS transistor (M2) functions as a current-source load.
+
+The required source-gate voltage is
+
+| Expression | Value |       |            |
+| ---------- | ----- | ----- | ---------- |
+| VSG2 =     | VTHp  | + VOV | **0.64 V** |
+
+Since the source terminal is tied to the supply voltage
+
+| Node | Voltage |
+| ---- | ------- |
+| VS2  | 1.5 V   |
+
+the gate voltage becomes
+
+| Expression       | Result     |
+| ---------------- | ---------- |
+| VG2 = VS2 − VSG2 | **0.86 V** |
+
+The resulting drain-source voltage is
+
+| Calculation | Result     |
+| ----------- | ---------- |
+| VSD2        | **0.25 V** |
+
+Thus the PMOS device operates correctly as an **active load**.
+
+---
+
+# 9. Verification of Saturation
+
+Each transistor is checked to ensure the saturation condition is satisfied.
+
+| Transistor | Condition | Result    |
+| ---------- | --------- | --------- |
+| M1         | VDS ≥ VOV | satisfied |
+| M3         | VDS ≥ VOV | satisfied |
+| M2         | VSD ≥ VOV | satisfied |
+
+All devices therefore remain in the correct operating region.
+
+---
+
+# 10. Final DC Operating Values
+
+| Parameter          | Value  |
+| ------------------ | ------ |
+| VS1                | 0.5 V  |
+| Output voltage     | 1.25 V |
+| Gate voltage of M1 | 1.11 V |
+| Gate voltage of M2 | 0.86 V |
+| Drain current      | 200 µA |
+| Overdrive voltage  | 0.25 V |
+
+---
+
+# 11. LTspice Operating Point
+
+<img width="854" height="608" alt="Operating Point" src="https://github.com/user-attachments/assets/38923257-f0fb-4176-9ef0-379769e01cd3" />
+
+---
+
+# 12. Transistor Width Selection
+
+Initial device dimensions were calculated using the MOSFET current equation.
+
+| Transistor               | Estimated Width | Final Simulated Width |
+| ------------------------ | --------------- | --------------------- |
+| M1 (NMOS amplifier)      | 5 µm            | 19.35 µm              |
+| M2 (PMOS load)           | 15.95 µm        | 60.75 µm              |
+| M3 (NMOS current source) | 11.83 µm        | 41.65 µm              |
+
+The values were later adjusted during simulation because practical transistor models include effects that differ from ideal theory.
+
+Examples include:
+
+* short-channel effects
+* device parameter variations
+* strong dependence on bias voltages
+
+---
+
+# 13. Transient Response
+
+### Input Signal
+
+<img width="1919" height="858" src="https://github.com/user-attachments/assets/659b3249-8413-4694-b17b-0f8213698e04" />
+
+### Output Signal
+
+<img width="1918" height="846" src="https://github.com/user-attachments/assets/840720fd-ab82-4028-8f76-82f28955f54e" />
+
+### Combined Waveforms
+
+<img width="1907" height="863" src="https://github.com/user-attachments/assets/d5fecae2-ae80-4b51-b92e-c300f022c820" />
+
+---
+
+# 14. Measured Voltage Gain
+
+| Measurement                 | Value    |
+| --------------------------- | -------- |
+| Input peak-to-peak voltage  | 0.0197 V |
+| Output peak-to-peak voltage | 0.1921 V |
+
+Voltage gain:
+
+| Gain             | Value        |
+| ---------------- | ------------ |
+| Linear gain      | **9.75 V/V** |
+| Gain in decibels | **19.78 dB** |
+
+The output signal amplitude is significantly larger than the input, confirming the amplifier functionality.
+
+---
+
+# 15. AC Frequency Response
+
+<img width="1914" height="877" src="https://github.com/user-attachments/assets/e1814d42-5da8-4f15-bcce-8b69637ad894" />
+
+| Parameter    | Value     |
+| ------------ | --------- |
+| Midband gain | 19.73 dB  |
+| −3 dB gain   | 16.73 dB  |
+| Bandwidth    | 662.6 MHz |
+
+The response remains nearly flat over the mid-frequency region and begins to decline after the −3 dB point.
+
+---
+
+# 16. Experiment Summary
+
+Three MOSFET amplifier structures were designed and analyzed:
+
+* Source-degenerated common source amplifier
+* Cascode amplifier
+* Common source amplifier with active load
+
+Each circuit was biased so that the MOSFETs operate in saturation.
+Transient simulations demonstrated signal amplification, while AC analysis revealed the gain and bandwidth.
+
+---
+
+# 17. Comparative Performance
+
+| Feature            | Circuit 2A          | Circuit 2B   | Circuit 2C           |
+| ------------------ | ------------------- | ------------ | -------------------- |
+| Amplifier topology | Source degeneration | Cascode      | Active load          |
+| Bias approach      | Source resistor     | Cascode bias | Diode-connected NMOS |
+| Output DC level    | ~0.95 V             | ~1.05 V      | ~1.25 V              |
+| Voltage gain       | ~19.5 dB            | ~4.66 dB     | ~19.73 dB            |
+| Bandwidth          | ~233.8 MHz          | ~276.8 MHz   | ~662 MHz             |
+| Stability          | High                | High         | Moderate             |
+
+---
+
+# 18. Conclusion
+
+The experiment highlights how amplifier topology influences performance.
+
+* Source degeneration improves stability but slightly reduces gain.
+* The cascode arrangement enhances output resistance and frequency behavior.
+* The active-load configuration provides higher voltage gain by replacing a large resistor with a current source.
+
+The simulation results confirm that the circuits behave as expected based on theoretical analysis.
+
+---
+
